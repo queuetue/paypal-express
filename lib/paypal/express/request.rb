@@ -67,7 +67,8 @@ module Paypal
           :AUTHORIZATIONID => authorization_id,
           :COMPLETETYPE => complete_type,
           :AMT => amount,
-          :CURRENCYCODE => currency_code
+          :CURRENCYCODE => currency_code,
+          :version   => Paypal.api_version
         }
 
         response = self.request :DoCapture, params
@@ -77,7 +78,8 @@ module Paypal
       def void!(authorization_id, params={})
         params = {
           :AUTHORIZATIONID => authorization_id,
-          :NOTE => params[:note]
+          :NOTE => params[:note],
+          :version   => Paypal.api_version
         }
 
         response = self.request :DoVoid, params
@@ -88,7 +90,8 @@ module Paypal
 
       def subscribe!(token, recurring_profile)
         params = {
-          :TOKEN => token
+          :TOKEN => token,
+          :version   => Paypal.api_version
         }
         params.merge! recurring_profile.to_params
         response = self.request :CreateRecurringPaymentsProfile, params
@@ -106,7 +109,8 @@ module Paypal
       def renew!(profile_id, action, options = {})
         params = {
           :PROFILEID => profile_id,
-          :ACTION => action
+          :ACTION => action,
+          :version   => Paypal.api_version
         }
         if options[:note]
           params[:NOTE] = options[:note]
@@ -132,7 +136,8 @@ module Paypal
 
       def agree!(token, options = {})
         params = {
-          :TOKEN => token
+          :TOKEN => token,
+          :version   => Paypal.api_version
         }
         if options[:max_amount]
           params[:MAXAMT] = Util.formatted_amount options[:max_amount]
@@ -143,7 +148,8 @@ module Paypal
 
       def agreement(reference_id)
         params = {
-          :REFERENCEID => reference_id
+          :REFERENCEID => reference_id,
+          :version   => Paypal.api_version
         }
         response = self.request :BillAgreementUpdate, params
         Response.new response
